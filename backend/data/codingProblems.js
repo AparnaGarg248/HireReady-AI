@@ -1,7 +1,3 @@
-// Each problem gives students an input on stdin and expects an exact
-// stdout match. This keeps evaluation simple and language-agnostic so it
-// works the same way for JavaScript, Python, Java, C++ or C via Judge0.
-
 const codingProblems = [
   {
     id: 1,

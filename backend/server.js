@@ -17,14 +17,12 @@ const adminRoutes = require("./routes/adminRoutes");
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// 👉 Connect to MongoDB Atlas using MONGODB_URI from backend/.env
 connectDB();
 
 app.use(cors({ origin: process.env.CLIENT_URL || "*" }));
 app.use(express.json({ limit: "5mb" }));
 app.use(express.urlencoded({ extended: true }));
 
-// Serve uploaded resumes statically (only reachable with the download route in practice)
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.get("/api/health", (req, res) => {

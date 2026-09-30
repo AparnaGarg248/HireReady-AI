@@ -1,7 +1,6 @@
 const Readiness = require("../models/Readiness");
 const { recalculateReadiness, WEIGHTS } = require("../utils/recalculateReadiness");
 
-// @route GET /api/readiness
 const getReadiness = async (req, res) => {
   try {
     let readiness = await Readiness.findOne({ userId: req.user.id });
@@ -15,7 +14,6 @@ const getReadiness = async (req, res) => {
   }
 };
 
-// @route POST /api/readiness/recalculate
 const refreshReadiness = async (req, res) => {
   try {
     const readiness = await recalculateReadiness(req.user.id);

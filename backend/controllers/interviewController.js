@@ -3,15 +3,12 @@ const InterviewResult = require("../models/InterviewResult");
 const { askGeminiForJSON, isGeminiConfigured } = require("../utils/geminiClient");
 const { recalculateReadiness } = require("../utils/recalculateReadiness");
 
-// @route GET /api/interview/questions?count=5
 const getQuestions = (req, res) => {
   const count = parseInt(req.query.count) || 5;
   const shuffled = [...interviewQuestionBank].sort(() => Math.random() - 0.5);
   return res.status(200).json({ success: true, questions: shuffled.slice(0, count) });
 };
 
-// @route POST /api/interview/submit  { questions: [...], answers: [...] }
-// Sends the Q&A transcript to Gemini and asks for HR-style feedback & scoring.
 const submitInterview = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -69,7 +66,6 @@ Return STRICT JSON only, no markdown, in this exact shape:
   }
 };
 
-// @route GET /api/interview/history
 const getHistory = async (req, res) => {
   try {
     const history = await InterviewResult.find({ userId: req.user.id }).sort({ interviewDate: -1 });

@@ -4,8 +4,6 @@ const CodingResult = require("../models/CodingResult");
 const InterviewResult = require("../models/InterviewResult");
 const Readiness = require("../models/Readiness");
 
-// Weights as defined on the "Overall Placement Readiness Index" screen:
-// Resume 20% | Coding 30% | Aptitude 25% | Interview 25%
 const WEIGHTS = { resume: 0.2, coding: 0.3, aptitude: 0.25, interview: 0.25 };
 
 async function recalculateReadiness(userId) {
@@ -37,7 +35,6 @@ async function recalculateReadiness(userId) {
       interviewScore * WEIGHTS.interview
   );
 
-  // Work out weakest two areas so the roadmap can target them
   const areaScores = [
     { name: "Resume", score: resumeScore },
     { name: "Coding", score: codingScore },

@@ -5,7 +5,6 @@ const CodingResult = require("../models/CodingResult");
 const InterviewResult = require("../models/InterviewResult");
 const Resume = require("../models/Resume");
 
-// @route GET /api/admin/users
 const getAllStudents = async (req, res) => {
   try {
     const students = await User.find({ role: "student" }).select("-password").sort({ createdAt: -1 });
@@ -28,7 +27,6 @@ const getAllStudents = async (req, res) => {
   }
 };
 
-// @route GET /api/admin/students/:id
 const getStudentDetail = async (req, res) => {
   try {
     const userId = req.params.id;
@@ -49,7 +47,6 @@ const getStudentDetail = async (req, res) => {
   }
 };
 
-// @route GET /api/admin/stats
 const getPlatformStats = async (req, res) => {
   try {
     const [totalStudents, totalAptitudeAttempts, totalCodingAttempts, totalInterviews, readinessList] = await Promise.all([

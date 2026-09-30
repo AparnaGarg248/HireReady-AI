@@ -6,7 +6,6 @@ const InterviewResult = require("../models/InterviewResult");
 const Readiness = require("../models/Readiness");
 const { recalculateReadiness } = require("../utils/recalculateReadiness");
 
-// @route GET /api/dashboard
 const getDashboardSummary = async (req, res) => {
   try {
     const userId = req.user.id;

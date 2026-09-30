@@ -2,7 +2,6 @@ const questionBank = require("../data/aptitudeQuestions");
 const AptitudeResult = require("../models/AptitudeResult");
 const { recalculateReadiness } = require("../utils/recalculateReadiness");
 
-// @route GET /api/aptitude/questions?category=&count=
 const getQuestions = (req, res) => {
   try {
     const { category, count } = req.query;
@@ -15,7 +14,6 @@ const getQuestions = (req, res) => {
     const limit = parseInt(count) || questions.length;
     const selected = questions.slice(0, limit);
 
-    // never send the correct answer / explanation to the client
     const sanitized = selected.map((q, idx) => ({
       id: q.id,
       index: idx + 1,
@@ -36,7 +34,6 @@ const getQuestions = (req, res) => {
   }
 };
 
-// @route POST /api/aptitude/submit  { category, answers: { [questionId]: optionIndex }, timeTakenSeconds }
 const submitAssessment = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -101,7 +98,6 @@ const submitAssessment = async (req, res) => {
   }
 };
 
-// @route GET /api/aptitude/history
 const getResultsHistory = async (req, res) => {
   try {
     const history = await AptitudeResult.find({ userId: req.user.id }).sort({ createdAt: -1 });
@@ -111,7 +107,6 @@ const getResultsHistory = async (req, res) => {
   }
 };
 
-// @route GET /api/aptitude/analytics
 const getAnalytics = async (req, res) => {
   try {
     const results = await AptitudeResult.find({ userId: req.user.id }).sort({ createdAt: 1 });

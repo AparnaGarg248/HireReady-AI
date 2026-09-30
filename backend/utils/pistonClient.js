@@ -1,13 +1,5 @@
-// ------------------------------------------------------------------
-// Thin wrapper around the Piston API (https://emkc.org) for code
-// execution. No API key or billing required - it's a free public
-// service. Drop-in replacement for the old Judge0 client.
-// ------------------------------------------------------------------
-
 const PISTON_URL = process.env.PISTON_API_URL || "https://emkc.org/api/v2/piston";
 
-// Maps our internal language keys to Piston's language + version.
-// Full list: GET https://emkc.org/api/v2/piston/runtimes
 const LANGUAGE_VERSIONS = {
   javascript: "18.15.0",
   python: "3.10.0",
@@ -16,8 +8,6 @@ const LANGUAGE_VERSIONS = {
   c: "10.2.0"
 };
 
-// Piston needs no key, so this always returns true. Kept for API
-// compatibility with the old isJudge0Configured() check.
 const isPistonConfigured = () => true;
 
 async function runOnPiston({ sourceCode, language, stdin }) {
@@ -53,8 +43,6 @@ async function runOnPiston({ sourceCode, language, stdin }) {
   const result = await res.json();
   const { run, compile } = result;
 
-  // Piston doesn't return a Judge0-style status string, so build a
-  // comparable one from the exit code / compile step.
   let status = "Accepted";
   if (compile && compile.code !== 0) status = "Compilation Error";
   else if (run?.signal) status = `Runtime Error (${run.signal})`;

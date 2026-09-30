@@ -5,7 +5,6 @@ const { askGeminiForJSON, isGeminiConfigured } = require("../utils/geminiClient"
 const { extractResumeText } = require("../utils/extractResumeText");
 const { recalculateReadiness } = require("../utils/recalculateReadiness");
 
-// @route POST /api/resume/upload
 const uploadResume = async (req, res) => {
   try {
     if (!req.file) {
@@ -18,7 +17,6 @@ const uploadResume = async (req, res) => {
     let resume = await Resume.findOne({ userId });
 
     if (resume) {
-      // remove the old file from disk before replacing it
       const oldPath = path.join(__dirname, "../", resume.filePath);
       if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
 
@@ -54,11 +52,6 @@ const uploadResume = async (req, res) => {
   }
 };
 
-// @route POST /api/resume/analyze
-// Sends the resume's file name + basic details to Gemini and asks it to
-// return an ATS score, strengths, suggestions and missing keywords.
-// (Full text extraction can be added later; this keeps the pipeline simple
-// and works purely off the metadata + optional pasted resume text.)
 const analyzeResume = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -76,8 +69,6 @@ const analyzeResume = async (req, res) => {
       });
     }
 
-    // Prefer text the user pasted in manually; otherwise pull it straight
-    // from the stored PDF/DOCX so analysis works without any copy-paste.
     let finalResumeText = (resumeText || "").trim();
     let extractionNote = "";
 
@@ -129,7 +120,6 @@ Return STRICT JSON only, no markdown, in this exact shape:
   }
 };
 
-// @route GET /api/resume
 const getResume = async (req, res) => {
   try {
     const resume = await Resume.findOne({ userId: req.user.id });
@@ -142,7 +132,6 @@ const getResume = async (req, res) => {
   }
 };
 
-// @route GET /api/resume/download
 const downloadResume = async (req, res) => {
   try {
     const resume = await Resume.findOne({ userId: req.user.id });
@@ -159,7 +148,6 @@ const downloadResume = async (req, res) => {
   }
 };
 
-// @route DELETE /api/resume
 const deleteResume = async (req, res) => {
   try {
     const resume = await Resume.findOneAndDelete({ userId: req.user.id });

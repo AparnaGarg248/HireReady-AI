@@ -2,12 +2,6 @@ const mongoose = require("mongoose");
 
 let isConnected = false;
 
-// ------------------------------------------------------------------
-// 👉 Set your MongoDB Atlas connection string in backend/.env as:
-//    MONGODB_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/hireready
-// Everything the app saves (users, resumes, test results, interview
-// feedback, readiness scores, roadmaps) will be stored in that database.
-// ------------------------------------------------------------------
 const connectDB = async () => {
   const uri = process.env.MONGODB_URI;
 

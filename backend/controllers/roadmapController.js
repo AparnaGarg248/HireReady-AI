@@ -3,9 +3,6 @@ const Readiness = require("../models/Readiness");
 const { askGeminiForJSON, isGeminiConfigured } = require("../utils/geminiClient");
 const { recalculateReadiness } = require("../utils/recalculateReadiness");
 
-// @route POST /api/roadmap/generate
-// Uses the student's current readiness score & weak areas to ask Gemini for
-// a 4-week personalized improvement roadmap.
 const generateRoadmap = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -59,7 +56,6 @@ their weak areas first. Return STRICT JSON only, no markdown, in this exact shap
   }
 };
 
-// @route GET /api/roadmap
 const getRoadmap = async (req, res) => {
   try {
     const roadmap = await Roadmap.findOne({ userId: req.user.id });

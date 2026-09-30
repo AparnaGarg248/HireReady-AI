@@ -3,7 +3,6 @@ const CodingResult = require("../models/CodingResult");
 const { runOnPiston, LANGUAGE_VERSIONS, isPistonConfigured } = require("../utils/pistonClient");
 const { recalculateReadiness } = require("../utils/recalculateReadiness");
 
-// @route GET /api/coding/problems
 const getProblems = (req, res) => {
   const list = codingProblems.map((p) => ({
     id: p.id,
@@ -15,7 +14,6 @@ const getProblems = (req, res) => {
   return res.status(200).json({ success: true, problems: list });
 };
 
-// @route GET /api/coding/problems/:id
 const getProblemById = (req, res) => {
   const problem = codingProblems.find((p) => p.id === parseInt(req.params.id));
   if (!problem) return res.status(404).json({ success: false, message: "Problem not found." });
@@ -32,8 +30,6 @@ const getProblemById = (req, res) => {
   });
 };
 
-// @route POST /api/coding/submit  { problemId, language, code }
-// Runs the submitted code against every test case via Piston and stores the score.
 const submitCode = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -106,7 +102,6 @@ const submitCode = async (req, res) => {
   }
 };
 
-// @route GET /api/coding/history
 const getHistory = async (req, res) => {
   try {
     const history = await CodingResult.find({ userId: req.user.id }).sort({ submissionDate: -1 });

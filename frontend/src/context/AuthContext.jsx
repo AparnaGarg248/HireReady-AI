@@ -25,8 +25,6 @@ export function AuthProvider({ children }) {
   };
 
   const register = async (formData) => {
-    // Intentionally does NOT log the user in or store a token here —
-    // after registering, the user is sent to /login to sign in manually.
     const { data } = await api.post("/auth/register", formData);
     return data.user;
   };

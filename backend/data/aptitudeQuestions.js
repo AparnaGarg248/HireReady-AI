@@ -1,5 +1,4 @@
 const questionBank = [
-  // --- QUANTITATIVE APTITUDE ---
   {
     id: 1,
     category: 'Quantitative Aptitude',
@@ -64,7 +63,6 @@ const questionBank = [
     explanation: 'Speed in m/s = 54 * (5/18) = 15 m/s. Time = Distance / Speed = 180 / 15 = 12 seconds.'
   },
 
-  // --- LOGICAL REASONING ---
   {
     id: 8,
     category: 'Logical Reasoning',
@@ -120,7 +118,6 @@ const questionBank = [
     explanation: 'An architect designs/creates a building; a sculptor creates a statue.'
   },
 
-  // --- VERBAL ABILITY ---
   {
     id: 14,
     category: 'Verbal Ability',

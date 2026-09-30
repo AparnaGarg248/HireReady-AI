@@ -11,7 +11,6 @@ const generateToken = (user) => {
   );
 };
 
-// @route POST /api/auth/register
 const register = async (req, res) => {
   try {
     const { name, email, password, confirmPassword, college, branch, academicYear } = req.body;
@@ -66,7 +65,6 @@ const register = async (req, res) => {
   }
 };
 
-// @route POST /api/auth/login
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -106,7 +104,6 @@ const login = async (req, res) => {
   }
 };
 
-// @route GET /api/auth/profile
 const getProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
@@ -119,7 +116,6 @@ const getProfile = async (req, res) => {
   }
 };
 
-// @route PUT /api/auth/profile
 const updateProfile = async (req, res) => {
   try {
     const { name, college, branch, academicYear } = req.body;
