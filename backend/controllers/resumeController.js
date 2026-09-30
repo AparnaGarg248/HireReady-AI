@@ -26,7 +26,7 @@ const uploadResume = async (req, res) => {
       resume.fileType = file.mimetype;
       resume.fileSize = file.size;
       resume.uploadDate = new Date();
-      // reset previous AI analysis since the file changed
+
       resume.atsScore = 0;
       resume.strengths = [];
       resume.suggestions = [];
