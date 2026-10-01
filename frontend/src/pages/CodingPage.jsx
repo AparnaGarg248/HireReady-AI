@@ -27,7 +27,7 @@ export default function CodingPage() {
   const openProblem = (problem) => {
     setSelected(problem);
     setLanguage("javascript");
-    setCode(problem.starterCode.javascript || "");
+    setCode("");
     setSubmission(null);
     setTestResults([]);
     setError("");

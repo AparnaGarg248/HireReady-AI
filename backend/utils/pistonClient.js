@@ -1,60 +1,80 @@
-const PISTON_URL = process.env.PISTON_API_URL || "https://emkc.org/api/v2/piston";
+const JUDGE0_URL = process.env.JUDGE0_API_URL || "https://ce.judge0.com";
 
-const LANGUAGE_VERSIONS = {
-  javascript: "18.15.0",
-  python: "3.10.0",
-  java: "15.0.2",
-  cpp: "10.2.0",
-  c: "10.2.0"
+const LANGUAGE_IDS = {
+  javascript: 63,
+  python: 71,
+  java: 62,
+  cpp: 54,
+  c: 50
 };
+
+const LANGUAGE_VERSIONS = LANGUAGE_IDS;
 
 const isPistonConfigured = () => true;
 
+function buildHeaders() {
+  const headers = { "Content-Type": "application/json" };
+  if (process.env.JUDGE0_RAPIDAPI_KEY) {
+    headers["X-RapidAPI-Key"] = process.env.JUDGE0_RAPIDAPI_KEY;
+    headers["X-RapidAPI-Host"] =
+      process.env.JUDGE0_RAPIDAPI_HOST || "judge0-ce.p.rapidapi.com";
+  }
+  if (process.env.JUDGE0_AUTH_TOKEN) {
+    headers["X-Auth-Token"] = process.env.JUDGE0_AUTH_TOKEN;
+  }
+  return headers;
+}
+
+function mapStatus(statusId, fallbackDescription) {
+  if (statusId === 3) return "Accepted";
+  if (statusId === 5) return "Time Limit Exceeded";
+  if (statusId === 6) return "Compilation Error";
+  if (statusId >= 7 && statusId <= 12) {
+    return `Runtime Error (${fallbackDescription})`;
+  }
+  return fallbackDescription || "Unknown";
+}
+
 async function runOnPiston({ sourceCode, language, stdin }) {
-  const version = LANGUAGE_VERSIONS[language];
-  if (!version) {
-    throw new Error(`Unsupported language for Piston: ${language}`);
+  const languageId = LANGUAGE_IDS[language];
+  if (!languageId) {
+    throw new Error(`Unsupported language: ${language}`);
   }
 
-  const fileName = {
-    javascript: "main.js",
-    python: "main.py",
-    java: "Main.java",
-    cpp: "main.cpp",
-    c: "main.c"
-  }[language];
-
-  const res = await fetch(`${PISTON_URL}/execute`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      language,
-      version,
-      files: [{ name: fileName, content: sourceCode }],
-      stdin: stdin || ""
-    })
-  });
+  const res = await fetch(
+    `${JUDGE0_URL}/submissions?base64_encoded=false&wait=true`,
+    {
+      method: "POST",
+      headers: buildHeaders(),
+      body: JSON.stringify({
+        source_code: sourceCode,
+        language_id: languageId,
+        stdin: stdin || ""
+      })
+    }
+  );
 
   if (!res.ok) {
     const errText = await res.text();
-    throw new Error(`Piston API error (${res.status}): ${errText}`);
+    throw new Error(`Judge0 API error (${res.status}): ${errText}`);
   }
 
   const result = await res.json();
-  const { run, compile } = result;
+  const statusId = result.status?.id;
 
-  let status = "Accepted";
-  if (compile && compile.code !== 0) status = "Compilation Error";
-  else if (run?.signal) status = `Runtime Error (${run.signal})`;
-  else if (run?.code !== 0) status = "Runtime Error";
+  if (statusId === 13 || statusId === 14) {
+    throw new Error(
+      `Judge0 internal error: ${result.message || result.status?.description}`
+    );
+  }
 
   return {
-    stdout: run?.stdout ?? "",
-    stderr: run?.stderr || compile?.stderr || "",
-    compileOutput: compile?.output || "",
-    status,
-    time: run?.time,
-    memory: run?.memory
+    stdout: result.stdout ?? "",
+    stderr: result.stderr || "",
+    compileOutput: result.compile_output || "",
+    status: mapStatus(statusId, result.status?.description),
+    time: result.time ? Number(result.time) : undefined,
+    memory: result.memory
   };
 }
 
